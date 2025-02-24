@@ -5,7 +5,8 @@ dotenv.config({ path: "./.env" });
 const userRouter = require("./routes/userRoutes");
 
 const app = express();
-app.use("user", userRouter);
+app.use(express.json());
+app.use("/user", userRouter);
 const DB = process.env.DATABASE.replace(
   "<db_password>",
   process.env.DATABASE_PASSWORD
