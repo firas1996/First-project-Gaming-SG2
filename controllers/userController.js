@@ -28,12 +28,15 @@ exports.signIn = async (req, res) => {
         message: "email and password are required !!!",
       });
     }
-    const user = User.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user || user.password != password) {
       return res.status(400).json({
         message: "email or password are incorrect !!!",
       });
     }
+    res.status(201).json({
+      message: "connection reussite !!!!",
+    });
   } catch (error) {
     res.status(400).json({
       message: "Fail !!!",
