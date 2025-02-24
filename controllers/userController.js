@@ -1,5 +1,47 @@
 const User = require("../models/userModel");
 
+exports.signUp = async (req, res) => {
+  try {
+    const newUser = await User.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+      confirmPassword: req.body.confirmPassword,
+    });
+    res.status(201).json({
+      message: "User Created !!!!",
+      data: { newUser },
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "Fail !!!",
+      error: error,
+    });
+  }
+};
+
+exports.signIn = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "email and password are required !!!",
+      });
+    }
+    const user = User.findOne({ email });
+    if (!user || user.password != password) {
+      return res.status(400).json({
+        message: "email or password are incorrect !!!",
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      message: "Fail !!!",
+      error: error,
+    });
+  }
+};
+
 exports.createUser = async (req, res) => {
   try {
     const newUser = await User.create(req.body);
@@ -53,6 +95,20 @@ exports.updateUser = async (req, res) => {
     res.status(201).json({
       message: "User Updated !!!!",
       data: { user },
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "Fail !!!",
+      error: error,
+    });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+      message: "User Deleted !!!!",
     });
   } catch (error) {
     res.status(400).json({
